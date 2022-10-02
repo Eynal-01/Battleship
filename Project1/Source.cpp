@@ -15,7 +15,7 @@ void main() {
 
 	srand(time(0));
 
-	//FirstScreen();
+	FirstScreen();
 	ShowMenu();
 
 }

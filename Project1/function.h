@@ -25,21 +25,6 @@ int** CreateArr(int size) {
 }
 
 
-void FillArr(int** arr, Pacman pack, Simvol s, int count, int data, int size) {
-
-	for (size_t i = 0; i < size; i++)
-	{
-		for (size_t j = 0; j < size; j++)
-		{
-			if (i == 0 || j == 0 || i == size - 1 || j == size - 1)
-				arr[i][j] = 9;
-
-			else
-				arr[i][j] = 0;
-		}
-	}
-}
-
 void Show_Text(string text, int time = 3)
 {
 	for (int i = 0; i < text.length(); i++)
@@ -49,9 +34,14 @@ void Show_Text(string text, int time = 3)
 	}cout << endl;
 }
 
+
+void WordGameOver();
+
+
 void YouLoserFunction() {
 	system("cls");
-	bool b = PlaySound(TEXT("GTA-San-Andreas-Mission-Failed-sound.wav"), NULL, SND_ASYNC);
+	mysetcolor(3, 0);
+	
 	system("cls");
 	Show_Text("        *     *     * * *     *     *               ", 3);
 	Show_Text("         *   *     *     *    *     *               ", 3);
@@ -75,7 +65,9 @@ void YouLoserFunction() {
 }
 
 void YouWinnerFunction() {
-	bool b = PlaySound(TEXT("GTA-San-Andreas-Mission-passed-sound.wav"), NULL, SND_ASYNC);
+	system("cls");
+	mysetcolor(3, 0);
+
 	system("cls");
 	Show_Text("        *     *     * * *     *     *               ", 3);
 	Show_Text("         *   *     *     *    *     *               ", 3);
@@ -98,8 +90,6 @@ void YouWinnerFunction() {
 	Show_Text("      			                  *       *       ***   *    *   *    *   * * * *   *     *   *   *   *  ", 3);
 }
 
-
-
 void WordWelcome();
 void AsciiBoat();
 void FirstScreen();
@@ -107,7 +97,8 @@ void ShowMenu();
 
 void ShowMyShips(int** arr, int size) {
 
-	cout << "  " << endl << endl << endl;
+	cout << "  " << endl;
+	cout << "\t\tPLAYER" << endl;
 
 	int counterbot = 0;
 	for (size_t i = 0; i < size; i++)
@@ -117,39 +108,44 @@ void ShowMyShips(int** arr, int size) {
 			if (arr[i][j] == 1) {
 
 				mysetcolor(2, 0);
-				cout << char(2) << "  ";	
+				cout << char(2) << "   ";	
 				mysetcolor(7, 0);
 			}
 			else if (arr[i][j] == 9) {
 
-				cout << char(240) << "  ";			//PACMAN
+				cout << char(240) << "   ";			//PACMAN
 			}
 			else if (arr[i][j] == 2) {
 
 				mysetcolor(6, 0);
-				cout << char(15) << "  ";			//BOMB SELECT
+				cout << char(15) << "   ";			//BOMB SELECT
 				mysetcolor(7, 0);
 			}
 			else if (arr[i][j] == 7) {
 				mysetcolor(4, 0);
-				cout << 'X' << "  ";         //DESTROYED SHIPS
+				cout << 'X' << "   ";         //DESTROYED SHIPS
 				mysetcolor(7, 0);
 				++counterbot;
 			}
 			else if (arr[i][j] == 0) {
 
 				mysetcolor(3, 0);				// AREA
-				cout << char(219) << "  ";
+				cout << char(219) << "   ";
 			}
 			else if (arr[i][j] == 5) {
 
 				mysetcolor(1, 0);
-				cout << char(4) << "  ";	// SHIPS	
+				cout << char(4) << "   ";	// SHIPS	
 				mysetcolor(7, 0);
 			}
 		}
 		cout << endl << endl;
-		if (counterbot == 20) {
+		if (counterbot == 18) {
+			system("cls");
+			WordGameOver();
+			Sleep(3000);
+			bool b = PlaySound(TEXT("GTA-San-Andreas-Mission-Failed-sound.wav"), NULL, SND_ASYNC);
+			system("cls");
 			YouLoserFunction();
 			Sleep(11000);
 		}
@@ -159,6 +155,7 @@ void ShowMyShips(int** arr, int size) {
 void ShowEnemyShips(int** arr, int size) {
 
 	cout << "  " << endl;
+	cout << "\t\tCPU" << endl;
 	int counterplayer = 0;
 
 	for (size_t i = 0; i < size; i++)
@@ -167,35 +164,39 @@ void ShowEnemyShips(int** arr, int size) {
 		{
 
 			if (arr[i][j] == 3) {
-
+				  
 				mysetcolor(6, 0);
-				cout << char(15) << "  ";		//BOMB PACMAN 
-				//mysetcolor(7, 0);
+				cout << char(15) << "   ";		//BOMB PACMAN 
 			}
 			else if (arr[i][j] == 0) {
 
 				mysetcolor(3, 0);
-				cout << char(219) << "  ";		//AREA
+				cout << char(219) << "   ";		//AREA
 			}
 			else if (arr[i][j] == 7) {
 				mysetcolor(4, 0);
-				cout << "X" << "  ";		   //BOMBED SHIPS
+				cout << "X" << "   ";		    //BOMBED SHIPS
 				mysetcolor(7, 0);
 				++counterplayer;
 			}
 			else if (arr[i][j] == 2) {
 
 				mysetcolor(5, 0);
-				cout << char(219) << "  ";		//BOMBED AREA
+				cout << char(219) << "   ";		//BOMBED AREA
 				mysetcolor(7, 0);
 			}
 			else {
 				mysetcolor(4, 0);
-				cout << char(219) << "  ";
+				cout << char(219) << "   ";
 			}
 		}
 		cout << endl << endl;
-		if (counterplayer == 20) {
+		if (counterplayer == 18) {
+			system("cls");
+			WordGameOver();
+			Sleep(3000);
+			bool b = PlaySound(TEXT("GTA-San-Andreas-Mission-passed-sound.wav"), NULL, SND_ASYNC);
+			system("cls");
 			YouWinnerFunction();
 			Sleep(11000);
 			
@@ -203,7 +204,7 @@ void ShowEnemyShips(int** arr, int size) {
 	}
 }
 
-inline bool IsEmpty(int** arr, int y, int x) {
+bool IsEmpty(int** arr, int y, int x) {
 	
 	if (y == mySize || x == mySize) {
 		return false;
@@ -380,7 +381,7 @@ bool PutShipsWithPacman(int** arr, int y, int x, Simvol direction, int count) {
 
 void PlacedShipManual(int** arr) {
 
-	int counters[10] = { 4,3,3,2,2,2,1,1,1,1 };
+	int counters[7] = { 4,3,3,2,2,2,2 };
 	int index = 0;
 
 	while (true) {
@@ -435,7 +436,7 @@ void PlacedShipManual(int** arr) {
 			pacman.y = 0;
 			arr[pacman.y][pacman.x] = 1;
 
-			if (index == 10) {
+			if (index == 7) {
 				break;
 			}
 		}
@@ -575,8 +576,8 @@ void PlacedShipRandomly(int** arr, int data) {
 
 	srand(200);
 
-	const int size = 10;
-	int counters[size] = { 4,3,3,2,2,2,1,1,1,1 };
+	const int size = 7;
+	int counters[size] = { 4,3,3,2,2,2,2 };
 
 	for (size_t i = 0; i < size; i++)
 		FillSpecialFunction(arr, counters[i], data);
@@ -587,8 +588,8 @@ void PlacedShipRandomlyEnemy(int** arr, int data) {
 
 	srand(101);
 
-	const int size = 10;
-	int counters[size] = { 4,3,3,2,2,2,1,1,1,1 };
+	const int size = 7;
+	int counters[size] = { 4,3,3,2,2,2,2 };
 
 	for (size_t i = 0; i < size; i++)
 		FillSpecialFunctionEnemy(arr, counters[i], data);
@@ -1275,6 +1276,15 @@ void WordWelcome() {
 }
 
 
+void WordGameOver() {
+	mysetcolor(3, 0);
+	Show_Text("\t\t\t - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -", 10);
+	Show_Text("\t\t\t -                          GAME OVER!                           -", 10);
+	Show_Text("\t\t\t - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -", 10);
+
+}
+
+
 void AsciiBoat()
 {
 	Show_Text(R"(                             ~ ~                                                              ~ ~
@@ -1333,8 +1343,8 @@ void RulesOfGames() {
 
 
 
-void FirstScreen() {
 bool b = PlaySound(TEXT("World-of-Warships_Epic-Music_.wav"), NULL, SND_ASYNC);
+void FirstScreen() {
 	mysetcolor(3, 0);
 
 	cout << "\n";
@@ -1378,11 +1388,11 @@ void ShowMenu() {
 	while (true) {
 
 		if (select == 1) {
-			//WordWelcome();
+			WordWelcome();
 			cout << endl << endl;
-			//AsciiBoat();
+			AsciiBoat();
+			cout << "\t\t\t\t\t\tENTER SELECT -> ";
 			cin >> select;
-
 			if (select == 0) {
 
 				PlacedShipRandomly(playerBoard, 5);
@@ -1414,12 +1424,23 @@ void ShowMenu() {
 					BattleRandom(playerBoard);
 				}
 			}
+			else {
+				system("cls");
+				ShowMenu();
+			}
 		}
 		else if (select == 2) {
 			system("cls");
 			RulesOfGames();
 			system("pause");
 			system("cls");
+			FirstScreen();
+			ShowMenu();
+		}
+		else if (select == 0) {
+			continue;
+		}
+		else {
 			FirstScreen();
 			ShowMenu();
 		}
